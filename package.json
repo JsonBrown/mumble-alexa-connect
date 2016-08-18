@@ -1,0 +1,21 @@
+{
+  "name": "mumble-alexa-connect",
+  "version": "0.0.1",
+  "description": "Connection / Translation layer between Mumble and AVS",
+  "main": "run.js",
+  "scripts": {
+    "start": "nodejs ./run.js"
+  },
+  "author": "jason brown",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "express": "^4.14.0",
+    "http-message-parser": "0.0.23",
+    "https": "^1.0.0",
+    "memorystream": "^0.3.1",
+    "sox-audio": "^0.3.0",
+    "stream-to-buffer": "^0.1.0",
+    "streamifier": "^0.1.1"
+  }
+}
