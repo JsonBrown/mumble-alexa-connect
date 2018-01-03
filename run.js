@@ -6,9 +6,12 @@ const fs = require('fs');
 
 var app = express();
 
-app.post('/', function (req, res) {
-    alexa.tell(toWav(req))
-        .then(s => toPCM(s).pipe(res))
+app.post('/:samplerate', function (req, res) {
+    var sampleRate = req.params['samplerate'];
+    if(sampleRate != "44100") sampleRate = "48000";
+    console.log(sampleRate);
+    alexa.tell(toWav(req,sampleRate))
+        .then(s => toPCM(s,sampleRate).pipe(res))
         .catch(e => {
             console.log(e);
             res.end();
@@ -18,14 +21,14 @@ app.post('/', function (req, res) {
 app.listen(3000, function () {
     console.log('Alexa Translation service loaded on port 3000');
 });
-function toPCM(input) {
+function toPCM(input, sampleRate) {
     var output = new MemoryStream();
     var cmd = new SoxCommand();
     cmd.on('error', () => {});
     cmd.input(input)
         .inputFileType('mp3')
         .output(output)
-        .outputSampleRate('48k')
+        .outputSampleRate(sampleRate)
         .outputEncoding('signed')
         .outputBits(16)
         .outputChannels(1)
@@ -33,12 +36,12 @@ function toPCM(input) {
         .run();
     return output;
 }
-function toWav(input) {
+function toWav(input, sampleRate) {
     var cmd = new SoxCommand();
     var output = new MemoryStream();
     cmd.on('error', () => {});
     cmd.input(input)
-        .inputSampleRate(48000)
+        .inputSampleRate(sampleRate)
         .inputEncoding('signed')
         .inputBits(16)
         .inputChannels(1)
